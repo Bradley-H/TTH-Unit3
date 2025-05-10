@@ -7,9 +7,7 @@ const themeOptions = themeSelect.querySelectorAll("select");
 const colors = document.querySelector("#color");
 const colorOptions = colors.querySelectorAll("option");
 let cost = document.querySelector("#activities-cost");
-const activities = Array.from(
-  document.querySelectorAll("#activities-box input[data-cost")
-);
+const activities = Array.from(document.querySelectorAll("#activities-box input[data-cost"));
 const payment = document.querySelector("#payment");
 const paymentOptions = Array.from(payment.querySelectorAll("option"));
 const methods = Array.from(document.querySelectorAll(".payment-methods div"));
@@ -128,10 +126,11 @@ const form = document.querySelector("form");
 
     // at least one activity
     if(!activities.some(activity => activity.checked)) {
-      // alert('One Activity must be selected before you can proceed.')
+      alert('One Activity must be selected before you can proceed.')
     }
 
     //if credit card is selected run regex to check the CC number (without dashes)
+    // check if the CVV is has 3 numbers
     const CCRegex = new RegExp(/^\d{13,16}$/);
     const ccInput = document.querySelector("#cc-num");
     const ccHint = document.querySelector("#cc-hint");
@@ -154,7 +153,25 @@ const form = document.querySelector("form");
     }
 
     // Zip code
-
+    const zipCode = document.querySelector('#zip')
+    const zipHint = document.querySelector('#zip-hint')
+    if(zipCode.value.length < 5){
+      zipHint.classList.remove("hint");
+      zipHint.parentElement.classList.add("not-valid");
+    } else {
+      zipHint.classList.add("hint");
+        zipHint.parentElement.classList.remove("not-valid");
+    }
     
   });
+
+  // 7. ACTIVITY SECTION //
+  activities.forEach(itm => {
+    itm.addEventListener("focus", () => {
+      itm.parentElement.classList.add("focus")
+    })
+    itm.addEventListener("blur", () => {
+      itm.parentElement.classList.remove("focus")
+    })
+  })
 })();

@@ -60,9 +60,16 @@ const form = document.querySelector("form");
       const checked = itm.checked;
       if (checked) {
         total += val;
+
       } else {
         total -= val;
       }
+      activities.forEach((activity) => {
+        if(activity !== itm && activity.dataset.dayAndTime === itm.dataset.dayAndTime){
+          activity.disabled = checked
+          activity.parentElement.classList.toggle("disabled", checked);
+        }
+      });
       cost.textContent = `Total: $${total}`;
     });
   });
@@ -92,9 +99,39 @@ const form = document.querySelector("form");
     }
   });
 
+
+
+ 
+
+
   //6. Form Validation
   const field = document.querySelector("fieldset");
   const label = field.querySelectorAll("label");
+
+
+   //check email if valid //
+   const emailInput = label[1].querySelector("input");
+   const emailHint = label[1].querySelector("#email-hint");
+   const emailRegex = new RegExp(/^[^@\s]+@[^@\s]+\.[a-z]+$/i);
+ 
+   emailInput.addEventListener('keyup', ()=> {
+     if(!emailRegex.test(emailInput.value)){
+       emailHint.classList.remove("hint");
+       emailHint.parentElement.classList.add("not-valid");
+     } else {
+      emailHint.classList.add("hint");
+      emailHint.classList.add("valid")
+      emailHint.parentElement.classList.remove("not-valid");
+     }
+
+    //  better error messages
+    if (emailInput.value.trim() == ""){
+      emailHint.textContent = "Please enter your Email"
+    } else if (!emailRegex.test(emailInput.value)){
+      emailHint.textContent = "Not a valid email. Please try again"
+    }
+   })
+ 
 
   form.addEventListener("submit", (e) => {
     e.preventDefault() // testing purposes
@@ -109,24 +146,9 @@ const form = document.querySelector("form");
       namehint.classList.remove("not-valid");
     }
 
-    //check email if valid //
-    const emailInput = label[1].querySelector("input");
-    const emailHint = label[1].querySelector("#email-hint");
-    const emailRegex = new RegExp(/^[^@\s]+@[^@\s]+\.[a-z]+$/i);
-
-    if(!emailRegex.test(emailInput.value)){
-      e.preventDefault();
-      emailHint.classList.remove("hint");
-      emailHint.parentElement.classList.add("not-valid");
-    } else {
-     emailHint.classList.add("hint");
-     emailHint.classList.add("valid")
-     emailHint.parentElement.classList.remove("not-valid");
-    }
-
     // at least one activity
     if(!activities.some(activity => activity.checked)) {
-      alert('One Activity must be selected before you can proceed.')
+      //
     }
 
     //if credit card is selected run regex to check the CC number (without dashes)
@@ -140,7 +162,7 @@ const form = document.querySelector("form");
         ccHint.classList.remove("hint");
         ccHint.parentElement.classList.add("not-valid");
       } else {
-        ccHint.classList.add("hint");
+        ccHint.classList.add("valid");
         ccHint.parentElement.classList.remove("not-valid");
       }
     if (CVV.value.length < 3){
@@ -149,6 +171,7 @@ const form = document.querySelector("form");
         console.log(CVV, CVV.value.length);
       } else {
         CVVHint.classList.add("hint");
+        CVVHint.parentElement.classList.add("valid")
         CVVHint.parentElement.classList.remove("not-valid");
     }
 
@@ -174,4 +197,5 @@ const form = document.querySelector("form");
       itm.parentElement.classList.remove("focus")
     })
   })
+
 })();

@@ -1,9 +1,7 @@
 const firstInput = document.getElementById("name");
 const jobRole = document.getElementById("title");
-const jobOptions = jobRole.querySelector("select");
 const otherJobRole = document.querySelector("#other-job-role");
 const themeSelect = document.querySelector("#design");
-const themeOptions = themeSelect.querySelectorAll("select");
 const colors = document.querySelector("#color");
 const colorOptions = colors.querySelectorAll("option");
 let cost = document.querySelector("#activities-cost");
@@ -113,11 +111,13 @@ const form = document.querySelector("form");
    const emailInput = label[1].querySelector("input");
    const emailHint = label[1].querySelector("#email-hint");
    const emailRegex = new RegExp(/^[^@\s]+@[^@\s]+\.[a-z]+$/i);
- 
-   emailInput.addEventListener('keyup', ()=> {
+
+
+     emailInput.addEventListener('keyup', ()=> {
      if(!emailRegex.test(emailInput.value)){
        emailHint.classList.remove("hint");
        emailHint.parentElement.classList.add("not-valid");
+       isValid = false
      } else {
       emailHint.classList.add("hint");
       emailHint.classList.add("valid")
@@ -127,20 +127,23 @@ const form = document.querySelector("form");
     //  better error messages
     if (emailInput.value.trim() == ""){
       emailHint.textContent = "Please enter your Email"
+      isValid = false;
     } else if (!emailRegex.test(emailInput.value)){
       emailHint.textContent = "Not a valid email. Please try again"
+      isValid = false;
     }
    })
- 
+
 
   form.addEventListener("submit", (e) => {
-    e.preventDefault() // testing purposes
+    let isValid = true; // I'm assuming it's true;
+
     const nameInput = label[0].querySelector("input");
     const namehint = label[0].querySelector("#name-hint");
     if (nameInput.value.trim() === "") {
-      e.preventDefault();
       namehint.classList.remove("hint");
       namehint.parentElement.classList.add("not-valid");
+      isValid = false;
     } else {
       namehint.classList.add("hint");
       namehint.classList.remove("not-valid");
@@ -148,7 +151,7 @@ const form = document.querySelector("form");
 
     // at least one activity
     if(!activities.some(activity => activity.checked)) {
-      //
+      isValid = false;
     }
 
     //if credit card is selected run regex to check the CC number (without dashes)
@@ -161,6 +164,7 @@ const form = document.querySelector("form");
     if(payment.value === "credit-card" && !CCRegex.test(ccInput.value)){
         ccHint.classList.remove("hint");
         ccHint.parentElement.classList.add("not-valid");
+        isValid = false;
       } else {
         ccHint.classList.add("valid");
         ccHint.parentElement.classList.remove("not-valid");
@@ -168,7 +172,7 @@ const form = document.querySelector("form");
     if (CVV.value.length < 3){
         CVVHint.classList.remove("hint");
         CVVHint.parentElement.classList.add("not-valid");
-        console.log(CVV, CVV.value.length);
+        isValid = false;
       } else {
         CVVHint.classList.add("hint");
         CVVHint.parentElement.classList.add("valid")
@@ -181,14 +185,15 @@ const form = document.querySelector("form");
     if(zipCode.value.length < 5){
       zipHint.classList.remove("hint");
       zipHint.parentElement.classList.add("not-valid");
+      isValid = false;
     } else {
       zipHint.classList.add("hint");
         zipHint.parentElement.classList.remove("not-valid");
     }
-    
-  });
 
-  // 7. ACTIVITY SECTION //
+  
+
+     // 7. ACTIVITY SECTION //
   activities.forEach(itm => {
     itm.addEventListener("focus", () => {
       itm.parentElement.classList.add("focus")
@@ -197,5 +202,13 @@ const form = document.querySelector("form");
       itm.parentElement.classList.remove("focus")
     })
   })
+
+  if(!isValid){
+    e.preventDefault()
+  }
+    
+  });
+
+
 
 })();

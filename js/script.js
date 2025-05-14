@@ -10,6 +10,8 @@ const payment = document.querySelector("#payment");
 const paymentOptions = Array.from(payment.querySelectorAll("option"));
 const methods = Array.from(document.querySelectorAll(".payment-methods div"));
 const form = document.querySelector("form");
+let isValid = true; // I'm assuming it's true;
+
 
 //IIFE
 (() => {
@@ -136,7 +138,6 @@ const form = document.querySelector("form");
 
 
   form.addEventListener("submit", (e) => {
-    let isValid = true; // I'm assuming it's true;
 
     const nameInput = label[0].querySelector("input");
     const namehint = label[0].querySelector("#name-hint");

@@ -5,12 +5,14 @@ const themeSelect = document.querySelector("#design");
 const colors = document.querySelector("#color");
 const colorOptions = colors.querySelectorAll("option");
 let cost = document.querySelector("#activities-cost");
-const activities = Array.from(document.querySelectorAll("#activities-box input[data-cost"));
+const activities = Array.from(
+  document.querySelectorAll("#activities-box input[data-cost")
+);
 const payment = document.querySelector("#payment");
 const paymentOptions = Array.from(payment.querySelectorAll("option"));
 const methods = Array.from(document.querySelectorAll(".payment-methods div"));
 const form = document.querySelector("form");
-let isValid = true; // I'm assuming it's true;
+let isValid = true; // I'm assuming it's true
 
 //IIFE
 (() => {
@@ -63,8 +65,11 @@ let isValid = true; // I'm assuming it's true;
         total -= val;
       }
       activities.forEach((activity) => {
-        if(activity !== itm && activity.dataset.dayAndTime === itm.dataset.dayAndTime){
-          activity.disabled = checked
+        if (
+          activity !== itm &&
+          activity.dataset.dayAndTime === itm.dataset.dayAndTime
+        ) {
+          activity.disabled = checked;
           activity.parentElement.classList.toggle("disabled", checked);
         }
       });
@@ -106,26 +111,26 @@ let isValid = true; // I'm assuming it's true;
   const emailHint = label[1].querySelector("#email-hint");
   const emailRegex = new RegExp(/^[^@\s]+@[^@\s]+\.[a-z]+$/i);
 
-  emailInput.addEventListener('keyup', ()=> {
-    if(!emailRegex.test(emailInput.value)){
+  emailInput.addEventListener("keyup", () => {
+    if (!emailRegex.test(emailInput.value)) {
       emailHint.classList.remove("hint");
       emailHint.parentElement.classList.add("not-valid");
-      isValid = false
+      isValid = false;
     } else {
       emailHint.classList.add("hint");
-      emailHint.classList.add("valid")
+      emailHint.parentElement.classList.add("valid");
       emailHint.parentElement.classList.remove("not-valid");
     }
 
     //  better error messages
-    if (emailInput.value.trim() == ""){
-      emailHint.textContent = "Please enter your Email"
+    if (emailInput.value.trim() == "") {
+      emailHint.textContent = "Please enter your Email";
       isValid = false;
-    } else if (!emailRegex.test(emailInput.value)){
-      emailHint.textContent = "Not a valid email. Please try again"
+    } else if (!emailRegex.test(emailInput.value)) {
+      emailHint.textContent = "Not a valid email. Please try again";
       isValid = false;
     }
-  })
+  });
 
   form.addEventListener("submit", (e) => {
     isValid = true; // reset validity at start
@@ -142,61 +147,62 @@ let isValid = true; // I'm assuming it's true;
     }
 
     // at least one activity
-    if(!activities.some(activity => activity.checked)) {
+    if (!activities.some((activity) => activity.checked)) {
       isValid = false;
     }
 
     // Only validate credit card fields if selected
     if (payment.value === "credit-card") {
       const CCRegex = new RegExp(/^\d{13,16}$/);
+
       const ccInput = document.querySelector("#cc-num");
       const ccHint = document.querySelector("#cc-hint");
-      const CVV = document.querySelector('#cvv');
-      const CVVHint = document.querySelector('#cvv-hint');
-      const zipCode = document.querySelector('#zip');
-      const zipHint = document.querySelector('#zip-hint');
+      const CVV = document.querySelector("#cvv");
+      const CVVHint = document.querySelector("#cvv-hint");
+      const zipCode = document.querySelector("#zip");
+      const zipHint = document.querySelector("#zip-hint");
 
       if (!CCRegex.test(ccInput.value)) {
         ccHint.classList.remove("hint");
         ccHint.parentElement.classList.add("not-valid");
         isValid = false;
       } else {
-        ccHint.classList.add("valid");
+        ccHint.parentElement.classList.add("valid");
         ccHint.parentElement.classList.remove("not-valid");
       }
 
-      if (CVV.value.length < 3){
+      if (CVV.value.length < 3) {
         CVVHint.classList.remove("hint");
         CVVHint.parentElement.classList.add("not-valid");
         isValid = false;
       } else {
         CVVHint.classList.add("hint");
-        CVVHint.parentElement.classList.add("valid")
+        CVVHint.parentElement.classList.add("valid");
         CVVHint.parentElement.classList.remove("not-valid");
       }
 
-      if(zipCode.value.length < 5){
+      if (zipCode.value.length < 5) {
         zipHint.classList.remove("hint");
         zipHint.parentElement.classList.add("not-valid");
         isValid = false;
       } else {
-        zipHint.classList.add("hint");
+        zipHint.parentElement.classList.add("valid");
         zipHint.parentElement.classList.remove("not-valid");
       }
     }
 
     // 7. ACTIVITY SECTION //
-    activities.forEach(itm => {
+    activities.forEach((itm) => {
       itm.addEventListener("focus", () => {
-        itm.parentElement.classList.add("focus")
-      })
+        itm.parentElement.classList.add("focus");
+      });
       itm.addEventListener("blur", () => {
-        itm.parentElement.classList.remove("focus")
-      })
-    })
+        itm.parentElement.classList.remove("focus");
+      });
+    });
 
-    if(!isValid){
-      e.preventDefault()
+    if (!isValid) {
+      e.preventDefault();
     }
   });
 })();

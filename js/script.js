@@ -14,9 +14,7 @@ const methods = Array.from(document.querySelectorAll(".payment-methods div"));
 const form = document.querySelector("form");
 let isValid = true; // I'm assuming it's true
 
-//IIFE
-(() => {
-  // setup
+// setup
   otherJobRole.style.display = "none";
   colors.disabled = true;
   paymentOptions[1].selected = true;
@@ -34,6 +32,7 @@ let isValid = true; // I'm assuming it's true
       otherJobRole.style.display = "none";
     }
   });
+
 
   //3. disable any option[data-type] that doesn't have the same value as theme
   themeSelect.addEventListener("change", (e) => {
@@ -53,7 +52,9 @@ let isValid = true; // I'm assuming it's true
     });
   });
 
-  // 4. update the total and calculate the amount from each activity (+=).
+
+
+// 4. update the total and calculate the amount from each activity (+=).
   let total = 0;
   activities.forEach((itm) => {
     itm.addEventListener("click", (e) => {
@@ -77,7 +78,17 @@ let isValid = true; // I'm assuming it's true
     });
   });
 
-  // 5. Payment Options
+ //6. Form Validation
+  const field = document.querySelector("fieldset");
+  const label = field.querySelectorAll("label");
+
+  //check email if valid //
+  const emailInput = label[1].querySelector("input");
+  const emailHint = label[1].querySelector("#email-hint");
+  const emailRegex = new RegExp(/^[^@\s]+@[^@\s]+\.[a-z]+$/i);
+
+
+ // 5. Payment Options
   payment.addEventListener("change", () => {
     const hideAll = () => {
       methods.forEach((itm) => {
@@ -102,16 +113,7 @@ let isValid = true; // I'm assuming it's true
     }
   });
 
-  //6. Form Validation
-  const field = document.querySelector("fieldset");
-  const label = field.querySelectorAll("label");
-
-  //check email if valid //
-  const emailInput = label[1].querySelector("input");
-  const emailHint = label[1].querySelector("#email-hint");
-  const emailRegex = new RegExp(/^[^@\s]+@[^@\s]+\.[a-z]+$/i);
-
-  emailInput.addEventListener("keyup", () => {
+emailInput.addEventListener("keyup", () => {
     if (!emailRegex.test(emailInput.value)) {
       emailHint.classList.remove("hint");
       emailHint.parentElement.classList.add("not-valid");
@@ -132,18 +134,29 @@ let isValid = true; // I'm assuming it's true
     }
   });
 
-  form.addEventListener("submit", (e) => {
-    isValid = true; // reset validity at start
 
+form.addEventListener("submit", (e) => {
+    isValid = true; // reset validity at start
     const nameInput = label[0].querySelector("input");
     const namehint = label[0].querySelector("#name-hint");
-    if (nameInput.value.trim() === "") {
+    if (nameInput.value.trim().length === 0) {
       namehint.classList.remove("hint");
       namehint.parentElement.classList.add("not-valid");
       isValid = false;
     } else {
       namehint.classList.add("hint");
       namehint.classList.remove("not-valid");
+      nameInput.parentElement.classList.add("valid")
+    }
+
+    if (!emailRegex.test(emailInput.value)) {
+      emailHint.classList.remove("hint");
+      emailHint.parentElement.classList.add("not-valid");
+      isValid = false;
+    } else {
+      emailHint.classList.add("hint");
+      emailHint.parentElement.classList.add("valid");
+      emailHint.parentElement.classList.remove("not-valid");
     }
 
     // at least one activity
@@ -171,7 +184,7 @@ let isValid = true; // I'm assuming it's true
         ccHint.parentElement.classList.remove("not-valid");
       }
 
-      if (CVV.value.length < 3) {
+      if (CVV.value.length < 3 || RegExp(/^\d+$/)) {
         CVVHint.classList.remove("hint");
         CVVHint.parentElement.classList.add("not-valid");
         isValid = false;
@@ -181,7 +194,7 @@ let isValid = true; // I'm assuming it's true
         CVVHint.parentElement.classList.remove("not-valid");
       }
 
-      if (zipCode.value.length < 5) {
+      if (zipCode.value.length < 5 || RegExp(/^\d+$/)) {
         zipHint.classList.remove("hint");
         zipHint.parentElement.classList.add("not-valid");
         isValid = false;
@@ -205,4 +218,3 @@ let isValid = true; // I'm assuming it's true
       e.preventDefault();
     }
   });
-})();

@@ -8,11 +8,12 @@ let cost = document.querySelector("#activities-cost");
 const activities = Array.from(
   document.querySelectorAll("#activities-box input[data-cost")
 );
+const activitiesBox = document.querySelector("#activities-box");
 const payment = document.querySelector("#payment");
 const paymentOptions = Array.from(payment.querySelectorAll("option"));
 const methods = Array.from(document.querySelectorAll(".payment-methods div"));
 const form = document.querySelector("form");
-let isValid = true; // I'm assuming it's true
+let isValid = false // I'm assuming it's false at the start
 
 // setup
 otherJobRole.style.display = "none";
@@ -132,9 +133,12 @@ emailInput.addEventListener("keyup", () => {
 });
 
 form.addEventListener("submit", (e) => {
-  isValid = true; // reset validity at start
+  isValid = false; // reset validity at start
   const nameInput = label[0].querySelector("input");
   const namehint = label[0].querySelector("#name-hint");
+   if (!isValid) {
+    e.preventDefault();
+  }
   if (nameInput.value.trim().length === 0) {
     namehint.classList.remove("hint");
     namehint.parentElement.classList.add("not-valid");
@@ -158,6 +162,13 @@ form.addEventListener("submit", (e) => {
   // at least one activity
   if (!activities.some((activity) => activity.checked)) {
     isValid = false;
+    activitiesBox.previousElementSibling.classList.add("not-valid")
+    activitiesBox.previousElementSibling.classList.remove("valid")
+    activitiesBox.style.borderColor = "Red"
+  } else {
+        activitiesBox.previousElementSibling.classList.remove("not-valid")
+            activitiesBox.previousElementSibling.classList.add("valid")
+    activitiesBox.style.borderColor = "transparent"
   }
 
   // Only validate credit card fields if selected
@@ -203,8 +214,9 @@ form.addEventListener("submit", (e) => {
       zipHint.style.display = "none"
     }
   }
+});
 
-  // 7. ACTIVITY SECTION //
+// 7. ACTIVITY SECTION //
   activities.forEach((itm) => {
     itm.addEventListener("focus", () => {
       itm.parentElement.classList.add("focus");
@@ -213,8 +225,3 @@ form.addEventListener("submit", (e) => {
       itm.parentElement.classList.remove("focus");
     });
   });
-
-  if (!isValid) {
-    e.preventDefault();
-  }
-});
